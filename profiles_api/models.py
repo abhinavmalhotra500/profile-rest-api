@@ -6,12 +6,12 @@ from django.contrib.auth.models import BaseUserManager
 
 class UserProfileManeger(BaseUserManager):
 
-    def create_user(self, email, name, password=None):
+    def create_user(self, email, name="", password=None):
         if not email:
             raise ValueError('user must have an email address')
 
-        email=self.normalize_email(email)
-        user=self.model(email=email,name=name)
+        email_=self.normalize_email(email)
+        user=self.model(email_,name)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -31,12 +31,12 @@ class UserProfileManeger(BaseUserManager):
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     email=models.EmailField(max_length=255,unique=True)
-    name=models.CharField(max_length=255)
+    name=models.CharField(max_length=255,default="")
     is_active=models.BooleanField(default=True)
     is_staff=models.BooleanField(default=False)
     objects=UserProfileManeger()
     USERNAME_FIELD='email'
-    REQUIRED_FIELDs=['username']
+    REQUIRED_FIELDs=['name']
 
 
     def get_full_name(self):
